@@ -4,7 +4,9 @@
     "host": {
       "ENV": "DATABASE_HOST"
     },
-    "port": "DATABASE_PORT",
+    "port": {
+      "ENV": "DATABASE_PORT"
+    },
     "user": {
       "ENV": "DATABASE_USER"
     },
