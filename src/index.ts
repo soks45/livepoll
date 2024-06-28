@@ -3,10 +3,10 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import * as process from 'node:process';
 import path from 'path';
-import { ApiRouter } from './api/routes';
+import { ApiRouter } from './api/infrastructure/routes';
 import { clientRouter } from './client/routes';
 import { errorHandler } from './midlewares/error.handler';
-import { DatabaseService } from './api/services/database.service';
+import { DatabaseService } from './api/infrastructure/db/database.service';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -33,4 +33,4 @@ async function bootstrap(): Promise<void> {
     });
 }
 
-bootstrap();
+bootstrap().catch((e) => console.error(e));
