@@ -38,16 +38,17 @@ export class PollService {
     async updatePollAnswers(
         userId: number,
         pollId: number,
-        answersToStayInPoll: Answer[],
+        answerIdsToStayInPoll: number[],
         newAnswers: AnswerData[]
     ): Promise<void> {
         await this.checkPollUser(userId, pollId);
-
         const currentAnswers: Answer[] = await this.answerService.getAnswersInPoll(pollId);
-        const answersToRemove: Answer[] = currentAnswers.filter(
-            (answer: Answer) => !!answersToStayInPoll.find((answerTSIP: Answer): boolean => answerTSIP.id === answer.id)
-        );
-        await this.answerService.deleteAnswers(answersToRemove);
+        const answersIdsToRemove: number[] = currentAnswers
+            .filter(
+                (answer: Answer) => !!answerIdsToStayInPoll.find((answerId: number): boolean => answerId === answer.id)
+            )
+            .map(({ id }) => id);
+        await this.answerService.deleteAnswers(answersIdsToRemove);
         if (newAnswers.length > 0) {
             for (const answerData of newAnswers) {
                 await this.answerService.createAnswer(pollId, answerData);

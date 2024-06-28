@@ -1,5 +1,4 @@
 import express, { Router } from 'express';
-import { Answer } from '../../core/models/answer';
 import { AnswerData } from '../../core/models/answer.data';
 import { Poll } from '../../core/models/poll';
 import { PollData } from '../../core/models/poll.data';
@@ -30,7 +29,7 @@ export function pollRouter(pollService: PollService): Router {
         .patch('/:id/answers', async (req, res, next) => {
             const userId: number = getUserId(res, next);
             const pollId: number = Number(req.params.id);
-            const answersToStayInPoll: Answer[] = req.body.stay;
+            const answersToStayInPoll: number[] = req.body.stay;
             const answersToAdd: AnswerData[] = req.body.add;
             await pollService.updatePollAnswers(userId, pollId, answersToStayInPoll, answersToAdd);
             res.status(204);

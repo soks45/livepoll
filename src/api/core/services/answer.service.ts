@@ -17,9 +17,9 @@ export class AnswerService {
         return this.answerRepository.readAllByPollId(pollId);
     }
 
-    async deleteAnswers(answers: Answer[]): Promise<void> {
-        if (answers.length > 0) {
-            await this.answerRepository.deleteList(answers.map(({ id }) => id));
+    async deleteAnswers(answerIds: number[]): Promise<void> {
+        if (answerIds.length > 0) {
+            await this.answerRepository.deleteList(answerIds);
         }
     }
 }

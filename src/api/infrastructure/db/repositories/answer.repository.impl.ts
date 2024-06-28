@@ -29,8 +29,8 @@ export class AnswerRepositoryImpl implements IAnswerRepository {
         return result.rows[0].id;
     }
 
-    update(id: number, answer: AnswerData): Promise<void> {
-        throw new Error('Method not implemented.');
+    async update(id: number, answer: AnswerData): Promise<void> {
+        await this.databaseService.query('UPDATE answer SET name = $1 WHERE id = $2', [answer.name, id]);
     }
 
     async deleteList(idList: number[]): Promise<void> {
