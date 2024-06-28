@@ -6,8 +6,8 @@ import { AnswerService } from './answer.service';
 
 export class UserAnswerService {
     constructor(
-        private readonly userAnswerRepository: IUserAnswerRepository,
-        private readonly answerService: AnswerService
+        private readonly answerService: AnswerService,
+        private readonly userAnswerRepository: IUserAnswerRepository
     ) {}
 
     async setAnswer(userId: number, pollId: number, answerId: number): Promise<number> {
