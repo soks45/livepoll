@@ -1,7 +1,7 @@
 /* Replace with your SQL commands */
 CREATE TABLE IF NOT EXISTS "answer"(
     id SERIAL PRIMARY KEY,
-    name VARCHAR(32) unique NOT NULL,
+    name VARCHAR(32) NOT NULL,
     pollId smallint NOT NULL
 );
 

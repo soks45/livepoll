@@ -29,11 +29,20 @@ export class PollService {
         return pollId;
     }
 
-    async updatePollData(pollId: number, poll: PollData): Promise<void> {
-        return this.pollRepository.update(pollId, poll);
+    async updatePollData(userId: number, pollId: number, pollData: PollData): Promise<void> {
+        await this.checkPollUser(userId, pollId);
+
+        return this.pollRepository.update(pollId, pollData);
     }
 
-    async updatePollAnswers(pollId: number, answersToStayInPoll: Answer[], newAnswers: AnswerData[]): Promise<void> {
+    async updatePollAnswers(
+        userId: number,
+        pollId: number,
+        answersToStayInPoll: Answer[],
+        newAnswers: AnswerData[]
+    ): Promise<void> {
+        await this.checkPollUser(userId, pollId);
+
         const currentAnswers: Answer[] = await this.answerService.getAnswersInPoll(pollId);
         const answersToRemove: Answer[] = currentAnswers.filter(
             (answer: Answer) => !!answersToStayInPoll.find((answerTSIP: Answer): boolean => answerTSIP.id === answer.id)
@@ -43,6 +52,13 @@ export class PollService {
             for (const answerData of newAnswers) {
                 await this.answerService.createAnswer(pollId, answerData);
             }
+        }
+    }
+
+    private async checkPollUser(userId: number, pollId: number): Promise<void> {
+        const poll: Poll = await this.getPoll(pollId);
+        if (poll.creatorId !== userId) {
+            throw new Error('Нельзя редактировать чужой опрос');
         }
     }
 }
