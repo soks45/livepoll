@@ -1,9 +1,9 @@
 import { UserAnswer } from 'api/core/models/user-answer';
-import { Client } from 'pg';
 import { IUserAnswerRepository } from '../../../core/repositories/user-answer.repository';
+import { DatabaseService } from '../database.service';
 
 export class UserAnswerRepositoryImpl implements IUserAnswerRepository {
-    constructor(private readonly databaseService: Client) {}
+    constructor(private readonly databaseService: DatabaseService) {}
 
     create(userId: number, pollId: number, answerId: number): Promise<number> {
         throw new Error('Method not implemented.');
