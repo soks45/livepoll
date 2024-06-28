@@ -1,8 +1,6 @@
 import express, { Router } from 'express';
+import { Core } from '../../api/core/core';
 
-const clientRouter: Router = express.Router();
-clientRouter.get('/', (req: express.Request, res: express.Response) => {
-    res.render('page');
-})
-
-export { clientRouter };
+export function clientRouter(core: Core): Router {
+    return express.Router();
+}

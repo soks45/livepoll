@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
+import { Core } from '../../core/core';
 
-const router: Router = express.Router();
-
-export { router as ApiRouter };
+export function apiRouter(core: Core): Router {
+    return express.Router();
+}

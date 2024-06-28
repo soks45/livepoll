@@ -3,16 +3,29 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import * as process from 'node:process';
 import path from 'path';
-import { ApiRouter } from './api/infrastructure/routes';
+import { ClientConfig } from 'pg';
+import { Core } from './api/core/core';
+import { DataService } from './api/infrastructure/db/data.service';
+import { DataServiceFactory } from './api/infrastructure/db/data.service.factory';
+import { apiRouter } from './api/infrastructure/routes';
 import { clientRouter } from './client/routes';
 import { errorHandler } from './midlewares/error.handler';
-import { DatabaseService } from './api/infrastructure/db/database.service';
 import dotenv from 'dotenv';
 
 dotenv.config();
+const config: ClientConfig = {
+    user: process.env.DATABASE_USER,
+    database: process.env.DATABASE_NAME,
+    host: process.env.DATABASE_HOST,
+    port: Number(process.env.DATABASE_PORT),
+    password: process.env.DATABASE_PASSWORD,
+    application_name: 'livepoll',
+};
 
 async function bootstrap(): Promise<void> {
     const app: Express = express();
+    const databaseServiceInstance: DataService = await DataServiceFactory.create(config);
+    const core: Core = new Core(databaseServiceInstance);
 
     app.use(logger('dev'))
         .use(express.json())
@@ -21,11 +34,9 @@ async function bootstrap(): Promise<void> {
         .set('view engine', 'ejs')
         .set('views', path.join(__dirname, 'client', 'views'))
         .use(express.static(path.join(__dirname, 'client', 'public')))
-        .use('/', clientRouter)
-        .use('/api', ApiRouter)
+        .use('/api', apiRouter(core))
+        .use('/', clientRouter(core))
         .use(errorHandler);
-
-    await DatabaseService.connect();
 
     const port: number = Number(process.env.SERVER_PORT);
     app.listen(port, () => {

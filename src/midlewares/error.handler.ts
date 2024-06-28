@@ -1,9 +1,7 @@
-import { Request, Response } from 'express';
-import { HttpError } from 'http-errors';
+import { NextFunction, Request, Response } from 'express';
 
-export const errorHandler = (err: HttpError, req: Request, res: Response): void => {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-    res.status(err.status || 500);
-    res.render('error', { error: err.message, status: err.status });
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
+    console.log(123);
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
 };
