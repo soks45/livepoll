@@ -9,5 +9,5 @@ export function apiRouter(core: Core): Router {
         .Router()
         .use('/answer', answerRouter(core.answerService))
         .use('/user', userRouter(core.userService))
-        .use('/poll', pollRouter(core.pollService));
+        .use('/poll', pollRouter(core.pollService, core.userAnswerService));
 }

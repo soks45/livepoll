@@ -10,7 +10,7 @@ export class UserAnswerService {
         private readonly userAnswerRepository: IUserAnswerRepository
     ) {}
 
-    async setAnswer(userId: number, pollId: number, answerId: number): Promise<number> {
+    async setAnswer(userId: number, pollId: number, answerId: number): Promise<void> {
         return this.userAnswerRepository.create(userId, pollId, answerId);
     }
 
