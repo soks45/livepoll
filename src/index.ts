@@ -9,7 +9,6 @@ import { DataService } from './api/infrastructure/db/data.service';
 import { DataServiceFactory } from './api/infrastructure/db/data.service.factory';
 import { apiRouter } from './api/infrastructure/routes';
 import { clientRouter } from './client/routes';
-import { errorHandler } from './midlewares/error.handler';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,13 +29,12 @@ async function bootstrap(): Promise<void> {
     app.use(logger('dev'))
         .use(express.json())
         .use(express.urlencoded({ extended: false }))
-        .use(cookieParser())
+        .use(cookieParser('COOKIE_SECRET'))
         .set('view engine', 'ejs')
         .set('views', path.join(__dirname, 'client', 'views'))
         .use(express.static(path.join(__dirname, 'client', 'public')))
         .use('/api', apiRouter(core))
-        .use('/', clientRouter(core))
-        .use(errorHandler);
+        .use('/', clientRouter(core));
 
     const port: number = Number(process.env.SERVER_PORT);
     app.listen(port, () => {
