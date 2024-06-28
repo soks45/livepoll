@@ -1,9 +1,8 @@
 /* Replace with your SQL commands */
 CREATE TABLE IF NOT EXISTS "answer"(
-    id smallint NOT NULL,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(32) unique NOT NULL,
-    pollId smallint NOT NULL,
-    PRIMARY KEY (id)
+    pollId smallint NOT NULL
 );
 
 ALTER TABLE answer ADD CONSTRAINT fk_answer_poll FOREIGN KEY (pollId) REFERENCES "poll"(id);

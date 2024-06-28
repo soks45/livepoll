@@ -1,5 +1,4 @@
-CREATE TABLE IF NOT EXISTS "user"(
-    id smallint NOT NULL,
-    name VARCHAR(32) NOT NULL,
-    PRIMARY KEY (id)
+CREATE TABLE IF NOT EXISTS "user_data"(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(32) NOT NULL
 );
