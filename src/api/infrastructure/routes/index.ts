@@ -7,7 +7,7 @@ import { userRouter } from './user.router';
 export function apiRouter(core: Core): Router {
     return express
         .Router()
-        .use('/answer', answerRouter(core.answerService))
+        .use('/answer', answerRouter(core.answerService, core.userService))
         .use('/user', userRouter(core.userService))
-        .use('/poll', pollRouter(core.pollService, core.userAnswerService));
+        .use('/poll', pollRouter(core.pollService, core.userAnswerService, core.userService));
 }

@@ -3,12 +3,13 @@ import Joi from 'joi';
 import { Answer } from '../../core/models/answer';
 import { AnswerData } from '../../core/models/answer.data';
 import { AnswerService } from '../../core/services/answer.service';
+import { UserService } from '../../core/services/user.service';
 import { authorized } from './midlewares/authorized';
 
-export function answerRouter(answerService: AnswerService): Router {
+export function answerRouter(answerService: AnswerService, userService: UserService): Router {
     return express
         .Router()
-        .use(authorized)
+        .use(authorized(userService))
         .post('/:pollId', async (req, res, next) => {
             const pollId: number = Number(req.params.pollId);
             const answerData: AnswerData = req.body;

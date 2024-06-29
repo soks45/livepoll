@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
+import { UserService } from '../../../core/services/user.service';
 
-export async function authorized(req: Request, res: Response, next: NextFunction): Promise<void> {
-    // TODO remove mock
-    res.locals.userId = 1;
-    next();
+export function authorized(userService: UserService): (req: Request, res: Response, next: NextFunction) => void {
+    return (req: Request, res: Response, next: NextFunction) => {
+        next();
+    };
 }
 
 export function getUserId(res: Response, next: NextFunction): number {

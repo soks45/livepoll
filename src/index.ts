@@ -1,4 +1,7 @@
 import express, { Express } from 'express';
+import session from 'express-session';
+// eslint-disable-next-line
+import sessionExtension from './types/session';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import * as process from 'node:process';
@@ -29,10 +32,21 @@ async function bootstrap(): Promise<void> {
     app.use(logger('dev'))
         .use(express.json())
         .use(express.urlencoded({ extended: false }))
+        /** cookie */
         .use(cookieParser('COOKIE_SECRET'))
+        .use(
+            session({
+                secret: 'COOKIE_SECRET',
+                resave: false,
+                saveUninitialized: true,
+                cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 дней
+            })
+        )
+        /** SSR */
         .set('view engine', 'ejs')
         .set('views', path.join(__dirname, 'client', 'views'))
         .use(express.static(path.join(__dirname, 'client', 'public')))
+        /** Роуты */
         .use('/api', apiRouter(core))
         .use('/', clientRouter(core));
 

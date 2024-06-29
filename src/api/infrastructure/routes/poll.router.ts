@@ -7,12 +7,17 @@ import { PollData } from '../../core/models/poll.data';
 import { UserAnswer } from '../../core/models/user-answer';
 import { PollService } from '../../core/services/poll.service';
 import { UserAnswerService } from '../../core/services/user-answer.service';
+import { UserService } from '../../core/services/user.service';
 import { authorized, getUserId } from './midlewares/authorized';
 
-export function pollRouter(pollService: PollService, userAnswerService: UserAnswerService): Router {
+export function pollRouter(
+    pollService: PollService,
+    userAnswerService: UserAnswerService,
+    userService: UserService
+): Router {
     return express
         .Router()
-        .use(authorized)
+        .use(authorized(userService))
         .post('/', async (req, res, next) => {
             const userId: number = getUserId(res, next);
             const pollData: PollData = req.body.poll;
