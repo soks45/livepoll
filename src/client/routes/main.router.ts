@@ -2,6 +2,8 @@ import express, { Router } from 'express';
 import Joi from 'joi';
 import { Answer } from '../../api/core/models/answer';
 import { AnswerData } from '../../api/core/models/answer.data';
+import { Pagination } from '../../api/core/models/pagination';
+import { PaginationResult } from '../../api/core/models/pagination-result';
 import { Poll } from '../../api/core/models/poll';
 import { PollData } from '../../api/core/models/poll.data';
 import { User } from '../../api/core/models/user';
@@ -28,10 +30,38 @@ export function clientMainRouter(
             res.render('main-page', { user });
         })
         .get('/poll', async (req, res) => {
-            const user: User = await userService.getUser(UserHelpers.getUserId(req));
-            const userPolls: Poll[] = await pollService.getUserPolls(user.id);
+            const { page, size } = req.query;
+            if (!page || !size) {
+                res.redirect(`/main/poll?page=1&size=10`);
+                return;
+            }
+            const pageParsed = Number(page);
+            const sizeParsed = Number(size);
+            const schema = Joi.number().integer().positive();
+            const pageValidation = schema.validate(pageParsed);
+            if (pageValidation.error) {
+                res.status(400).json({ error: pageValidation.error });
+                return;
+            }
+            const sizeValidation = schema.validate(sizeParsed);
+            if (sizeValidation.error) {
+                res.status(400).json({ error: sizeValidation.error });
+                return;
+            }
 
-            res.render('poll-page', { user, polls: userPolls });
+            const user: User = await userService.getUser(UserHelpers.getUserId(req));
+            const userPolls: PaginationResult<Poll> = await pollService.getUserPollsPaginated(
+                user.id,
+                new Pagination(pageParsed, sizeParsed)
+            );
+
+            res.render('poll-page', {
+                user,
+                polls: userPolls.items,
+                page: userPolls.page,
+                totalPages: userPolls.totalPages,
+                size: sizeParsed,
+            });
         })
         .post('/poll', async (req, res) => {
             const user: User = await userService.getUser(UserHelpers.getUserId(req));

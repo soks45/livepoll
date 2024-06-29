@@ -1,5 +1,7 @@
 import { Answer } from '../models/answer';
 import { AnswerData } from '../models/answer.data';
+import { Pagination } from '../models/pagination';
+import { PaginationResult } from '../models/pagination-result';
 import { Poll } from '../models/poll';
 import { PollData } from '../models/poll.data';
 import { IPollRepository } from '../repositories/poll.repository';
@@ -17,6 +19,10 @@ export class PollService {
 
     async getUserPolls(userId: number): Promise<Poll[]> {
         return this.pollRepository.readByUserId(userId);
+    }
+
+    async getUserPollsPaginated(userId: number, pagination: Pagination): Promise<PaginationResult<Poll>> {
+        return this.pollRepository.readPageByUserId(userId, pagination.size, pagination.page);
     }
 
     async createPoll(userId: number, poll: PollData, answers: AnswerData[]): Promise<number> {

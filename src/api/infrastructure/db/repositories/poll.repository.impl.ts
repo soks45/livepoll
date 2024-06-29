@@ -1,3 +1,4 @@
+import { PaginationResult } from '../../../core/models/pagination-result';
 import { Poll } from '../../../core/models/poll';
 import { PollData } from '../../../core/models/poll.data';
 import { QueryResult } from 'pg';
@@ -28,6 +29,24 @@ export class PollRepositoryImpl implements IPollRepository {
             [userId]
         );
         return result.rows.map((dto) => new Poll(dto.id, dto.name, dto.creatorid));
+    }
+
+    async readPageByUserId(userId: number, size: number, page: number): Promise<PaginationResult<Poll>> {
+        const result: QueryResult<PollDTO> = await this.databaseService.query<PollDTO>(
+            'SELECT * FROM poll WHERE creatorId = $1 LIMIT $2 OFFSET $3',
+            [userId, size, (page - 1) * size]
+        );
+        const count = await this.databaseService.query<{ count: number }>(
+            'SELECT COUNT(*) FROM poll WHERE creatorId = $1',
+            [userId]
+        );
+        const items: Poll[] = result.rows.map((dto) => new Poll(dto.id, dto.name, dto.creatorid));
+        const paginationResult: PaginationResult<Poll> = new PaginationResult<Poll>(
+            items,
+            page,
+            Math.floor(count.rows[0].count / size) || 1
+        );
+        return paginationResult;
     }
 
     async create(userId: number, data: PollData): Promise<number> {

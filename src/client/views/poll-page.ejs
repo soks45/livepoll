@@ -15,5 +15,19 @@
         </div>
     </section>
     <%- include('components/poll-list', { polls }) %>
+    <section class="bg-white dark:bg-gray-900">
+        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-12">
+            <% if (page > 1) { %>
+                <a href="/main/poll?page=<%= page - 1 %>&size=<%= size %>" class="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    назад
+                </a>
+            <% } %>
+            <% if (page < totalPages) { %>
+                <a href="/main/poll?page=<%= page + 1 %>&size=<%= size %>" class="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    вперед
+                </a>
+            <% } %>
+        </div>
+    </section>
 </body>
 </html>
