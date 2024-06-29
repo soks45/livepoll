@@ -3,7 +3,7 @@
         <h2>Мои опросы</h2>
         <div class="mt-6 divide-y divide-gray-200 dark:divide-gray-700">
             <% polls.forEach((poll) => { %>
-                <a href="/main/poll/<%= poll.id %>" class="gap-3 pb-6 sm:flex sm:items-start">123</a>
+                <a href="/main/poll/<%= poll.id %>" class="gap-3 pb-6 sm:flex sm:items-start"><%= poll.name %></a>
             <% }); %>
         </div>
     </div>
