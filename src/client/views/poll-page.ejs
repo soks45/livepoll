@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Express App</title>
+    <script src="/external/tailwind.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.6.3/dist/flowbite.min.js"></script>
+</head>
+<body>
+    <%- include('components/header', { user: user }) %>
+    <section class="bg-white dark:bg-gray-900">
+        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-12">
+            <%- include('components/create-poll', { user: user }) %>
+        </div>
+    </section>
+</body>
+</html>

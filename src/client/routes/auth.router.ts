@@ -7,7 +7,7 @@ export function clientAuthRouter(userService: UserService): Router {
     return express
         .Router()
         .get('/', (req, res, next) => {
-            res.render('auth');
+            res.render('auth-page');
         })
         .post('/', async (req, res, next) => {
             const userData: UserData = req.body as UserData;
