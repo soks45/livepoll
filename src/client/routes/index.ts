@@ -10,5 +10,9 @@ export function clientRouter(core: Core): Router {
         .Router()
         .get('/', rootGuard)
         .use('/auth', clientAuthRouter(core.userService))
-        .use('/main', checkAuthGuard, clientMainRouter(core.userService, core.pollService));
+        .use(
+            '/main',
+            checkAuthGuard,
+            clientMainRouter(core.userService, core.pollService, core.answerService, core.userAnswerService)
+        );
 }

@@ -8,12 +8,11 @@
     <script src="https://cdn.jsdelivr.net/npm/flowbite@1.6.3/dist/flowbite.min.js"></script>
 </head>
 <body>
-    <%- include('components/header', { user: user }) %>
+    <%- include('components/header', { user }) %>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-12">
-            <%- include('components/create-poll', { user: user }) %>
+            <%- include('components/pass-poll-form', { poll, answers }) %>
         </div>
     </section>
-    <%- include('components/poll-list', { polls }) %>
 </body>
 </html>
