@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import Joi from 'joi';
 import { User } from '../../core/models/user';
 import { UserData } from '../../core/models/user.data';
 import { UserService } from '../../core/services/user.service';
@@ -6,18 +7,38 @@ import { UserService } from '../../core/services/user.service';
 export function userRouter(userService: UserService): Router {
     return express
         .Router()
-        .get('/all', async (req, res, next) => {
+        .get('/all', async (req, res) => {
             const users: User[] = await userService.getUsers();
             res.status(200).json(users);
         })
-        .get('/:id', async (req, res, next) => {
+        .get('/:id', async (req, res) => {
             const id: number = Number(req.params.id);
-            const user: User = await userService.getUser(id);
-            res.status(200).json(user);
+            const schema = Joi.number().integer().positive();
+            const { error } = schema.validate(id);
+            if (error) {
+                return res.status(400).json({ error });
+            }
+            try {
+                const user: User = await userService.getUser(id);
+                res.status(200).json(user);
+            } catch (e) {
+                return res.status(404).json({});
+            }
         })
-        .post('/', async (req, res, next) => {
+        .post('/', async (req, res) => {
             const userData: UserData = req.body as UserData;
-            const id: number = await userService.createUser(userData);
-            res.status(201).json({ id });
+            const schema = Joi.object({
+                name: Joi.string().required(),
+            });
+            const { error } = schema.validate(userData);
+            if (error) {
+                return res.status(400).json({ error });
+            }
+            try {
+                const id: number = await userService.createUser(userData);
+                res.status(201).json({ id });
+            } catch (e) {
+                return res.status(500).json({ e });
+            }
         });
 }
